@@ -1,12 +1,20 @@
 package com.softserve.kh05802.wargame;
 
 public class Healer extends Warrior {
-    private int healing = 2;
+    private int healing;
 
     public Healer() {
         this(0, 60, 2);
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName()+"{" +
+                "health=" + getHealth() +
+                ", attack=" + getAttack() +
+                ", healing=" + healing +
+                '}';
+    }
 
     protected Healer(int attack, int health, int healing) {
         super(attack, health);

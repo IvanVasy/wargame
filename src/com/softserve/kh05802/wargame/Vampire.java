@@ -1,7 +1,7 @@
 package com.softserve.kh05802.wargame;
 
 public class Vampire extends Warrior {
-    private int vampirism = 50;// percents
+    private int vampirism;// percents
 
 
     public Vampire() {

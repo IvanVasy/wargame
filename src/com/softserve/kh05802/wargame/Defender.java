@@ -2,7 +2,7 @@ package com.softserve.kh05802.wargame;
 
 public class Defender extends Warrior {
 
-    private int defense = 2;
+    private int defense;
 
     public Defender() {
         this(3, 60, 2);

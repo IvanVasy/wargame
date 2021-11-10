@@ -6,7 +6,6 @@ import java.util.List;
 
 public class Army {
 
-    private int counter = 0;
     private boolean haveWarlord = false;
     private LinkedList<Warrior> preparedArmy = new LinkedList<>();
 
@@ -16,11 +15,7 @@ public class Army {
         for (Warrior warrior : preparedArmy) {
             hisAlive = warrior.isAlive();
         }
-        if (preparedArmy.isEmpty()) {
-            return false;
-        } else {
-            return hisAlive;
-        }
+        return !preparedArmy.isEmpty() && hisAlive;
     }
 
     public Warrior peekUnit(int i) {
@@ -48,11 +43,12 @@ public class Army {
         return this;
     }
 
-    protected void rebuild() {
-        if (preparedArmy.size() != 1) {
-            for (int i = 0; i < preparedArmy.size() - 1; i++) {
-                preparedArmy.get(i).setBehind(preparedArmy.get(i + 1));
-            }
+    protected void reconnect() {
+        if (preparedArmy.size() == 1) {
+            return;
+        }
+        for (int i = 0; i < preparedArmy.size() - 1; i++) {
+            preparedArmy.get(i).setBehind(preparedArmy.get(i + 1));
         }
     }
 
@@ -63,13 +59,12 @@ public class Army {
                 res.add(generateUnit(type));
                 haveWarlord = true;
             }
-            return res;
         } else {
             for (int i = 0; i < quantity; i++) {
                 res.add(generateUnit(type));
             }
-            return res;
         }
+        return res;
     }
 
     private Warrior generateUnit(Class<? extends Warrior> type) {
@@ -99,33 +94,23 @@ public class Army {
     }
 
     protected void moveUnits() {
-        if (!haveWarlord) {
+        if (!haveWarlord)
             return;
-        }
-        for (int i = 0; i < preparedArmy.size(); i++) {
+        for (int i = 0; i < preparedArmy.size(); i++)
             for (int j = i + 1; j < preparedArmy.size(); j++) {
-                if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class)) {
+                if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class))
                     swap(i, j);
-                }
-                if (checkFor(i, Warlord.class)) {
+                if (checkFor(i, Warlord.class))
                     swap(i, preparedArmy.size() - 1);
-                }
-                if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class)) {
+                if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class))
                     swap(0, j);
-                }
-                if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class)) {
+                if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class))
                     swap(i, j);
-                }
             }
-        }
     }
 
-    public int getCounter() {
-        return counter;
-    }
-
-    protected void setCounter(int counter) {
-        this.counter = counter;
+    public int getFirst() {
+        return 0;
     }
 
     public List<Warrior> getPreparedArmy() {

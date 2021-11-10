@@ -24,10 +24,11 @@ public class Battle {
         while (army1.armyIsAlive() && army2.armyIsAlive()) {
             for (int counter = 0; counter < Math.min(attacker.size(), defender.size()); counter++) {
                 fight(attacker.get(counter), defender.get(counter));
-
             }
             army1.clearArmy();
             army2.clearArmy();
+            army1.moveUnits();
+            army2.moveUnits();
         }
         return army1.armyIsAlive();
     }
@@ -35,18 +36,21 @@ public class Battle {
     public static boolean fight(Army army1, Army army2) {
         List<Warrior> attacker = army1.getPreparedArmy();
         army1.fightModeSetStraight(true);
+        army1.reconnect();
         List<Warrior> defender = army2.getPreparedArmy();
-        army1.fightModeSetStraight(true);
+        army2.fightModeSetStraight(true);
+        army2.reconnect();
         while (army1.armyIsAlive() && army2.armyIsAlive()) {
-            if (fight(attacker.get(army1.getCounter()), defender.get(army2.getCounter()))) {
+            if (fight(attacker.get(army1.getFirst()), defender.get(army2.getFirst()))) {
                 army2.clearArmy();
                 army2.moveUnits();
-                army2.rebuild();
+                army2.reconnect();
             } else {
                 army1.clearArmy();
                 army1.moveUnits();
-                army1.rebuild();
+                army1.reconnect();
             }
+
         }
         return army1.armyIsAlive();
     }

@@ -1,10 +1,10 @@
 package com.softserve.kh05802.wargame;
 
 public class Warrior {
-    private int health = 50;
-    private int attack = 5;
-    private int maxHealth = health;
-    private Warrior behind = null;
+    private int health;
+    private int attack;
+    private int maxHealth;
+    private Warrior behind;
     private boolean fightMode = true; //true - fight from a lot of duels; false - wall vs wall
 
 
@@ -15,29 +15,40 @@ public class Warrior {
     protected Warrior(int attack, int health) {
         this.attack = attack;
         this.health = health;
+        maxHealth = health;
     }
 
     void equipWeapon(Weapon weapon) {
+        if (!isAlive() || weapon == null) {
+            return;
+        }
+        health += weapon.getHealth();
+        maxHealth = health;
         attack += weapon.getAttack();
         if (attack < 0)
             attack = 0;
-        maxHealth += weapon.getHealth();
-        health = maxHealth;
-        if (health < 0)
-            health = 0;
     }
 
     void hits(Warrior damageTaker) {
         damageTaker.setHealth(damageTaker.getHealth() - damageTaker.getDamage(this));
         if (getFightMode()) {
-            if (getBehind() instanceof Healer) {
-                ((Healer) getBehind()).heal(this);
+            if (!(getBehind() instanceof Healer)) {
+                return;
             }
+            ((Healer) getBehind()).heal(this);
         }
     }
 
     protected int getDamage(Warrior damageDealer) {
         return damageDealer.getAttack();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + '{' +
+                "health=" + health +
+                ", attack=" + attack +
+                '}';
     }
 
     void setHealth(int health) {
@@ -72,8 +83,8 @@ public class Warrior {
         return fightMode;
     }
 
-    boolean setFightMode(boolean fightMode) {
-        return this.fightMode = fightMode;
+    void setFightMode(boolean fightMode) {
+        this.fightMode = fightMode;
     }
 
     protected void setBehind(Warrior behind) {

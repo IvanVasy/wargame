@@ -1,7 +1,7 @@
 package com.softserve.kh05802.wargame;
 
 public class Lancer extends Warrior {
-    private int damageDrop = 50;
+    private int damageDrop;
 
     public Lancer() {
         this(6, 50, 50);
@@ -18,6 +18,8 @@ public class Lancer extends Warrior {
         int firstDealDamage = damageTaker.getDamage(this);
         damageTaker.setHealth(damageTaker.getHealth() - firstDealDamage);
         if (getFightMode()) {
+            if (getBehind() instanceof Healer)
+                ((Healer) getBehind()).heal(this);
             Warrior behind = damageTaker.getBehind();
             if (behind != null) {
                 behind.setHealth(behind.getHealth() - behind.getDamage(this.new Proxy(firstDealDamage)));

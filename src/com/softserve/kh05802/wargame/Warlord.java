@@ -2,10 +2,10 @@ package com.softserve.kh05802.wargame;
 
 public class Warlord extends Warrior {
 
-    private int defense = 2;
+    private int defense;
 
     public Warlord() {
-        this(5, 100, 2);
+        this(4, 100, 2);
     }
 
     protected Warlord(int attack, int health, int defense) {
@@ -15,7 +15,13 @@ public class Warlord extends Warrior {
 
     @Override
     void equipWeapon(Weapon weapon) {
-        super.equipWeapon(weapon);
+       this.setAttack(this.getAttack()+ weapon.getAttack());
+        if (getAttack() < 0)
+            setAttack(0);
+        setMaxHealth(getMaxHealth()+ weapon.getHealth());
+        setHealth(getMaxHealth());
+        if (getHealth() < 0)
+            setHealth(0);
         defense += weapon.getDefense();
         if (defense < 0) {
             defense = 0;

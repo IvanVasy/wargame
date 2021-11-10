@@ -9,42 +9,42 @@ public class Weapon {
 
     static Weapon katana() {
         return new Weapon.WeaponBuilder()
-                .WeaponWithHealth(-20)
-                .WeaponWithAttack(+6)
-                .WeaponWithDefense(-5)
-                .WeaponWithVampirism(+50)
+                .weaponWithHealth(-20)
+                .weaponWithAttack(+6)
+                .weaponWithDefense(-5)
+                .weaponWithVampirism(+50)
                 .build();
     }
 
     static Weapon sword() {
         return new Weapon.WeaponBuilder()
-                .WeaponWithHealth(+5)
-                .WeaponWithAttack(+2)
+                .weaponWithHealth(+5)
+                .weaponWithAttack(+2)
                 .build();
     }
 
     static Weapon shield() {
         return new Weapon.WeaponBuilder()
-                .WeaponWithHealth(+20)
-                .WeaponWithAttack(-1)
-                .WeaponWithDefense(+2)
+                .weaponWithHealth(+20)
+                .weaponWithAttack(-1)
+                .weaponWithDefense(+2)
                 .build();
     }
 
     static Weapon greateAxe() {
         return new Weapon.WeaponBuilder()
-                .WeaponWithHealth(-15)
-                .WeaponWithAttack(+5)
-                .WeaponWithDefense(-2)
-                .WeaponWithVampirism(+10)
+                .weaponWithHealth(-15)
+                .weaponWithAttack(+5)
+                .weaponWithDefense(-2)
+                .weaponWithVampirism(+10)
                 .build();
     }
 
     static Weapon magicWand() {
         return new Weapon.WeaponBuilder()
-                .WeaponWithHealth(+30)
-                .WeaponWithAttack(+3)
-                .WeaponWithHealing(+3)
+                .weaponWithHealth(+30)
+                .weaponWithAttack(+3)
+                .weaponWithHealing(+3)
                 .build();
     }
 
@@ -69,33 +69,33 @@ public class Weapon {
     }
 
     static class WeaponBuilder {
-        private Weapon newWeapon;
+        private final Weapon newWeapon;
 
         WeaponBuilder() {
             newWeapon = new Weapon();
         }
 
-        WeaponBuilder WeaponWithAttack(int attack) {
+        WeaponBuilder weaponWithAttack(int attack) {
             newWeapon.attack = attack;
             return this;
         }
 
-        WeaponBuilder WeaponWithHealth(int health) {
+        WeaponBuilder weaponWithHealth(int health) {
             newWeapon.health = health;
             return this;
         }
 
-        WeaponBuilder WeaponWithDefense(int defense) {
+        WeaponBuilder weaponWithDefense(int defense) {
             newWeapon.defense = defense;
             return this;
         }
 
-        WeaponBuilder WeaponWithVampirism(int vampirism) {
+        WeaponBuilder weaponWithVampirism(int vampirism) {
             newWeapon.vampirism = vampirism;
             return this;
         }
 
-        WeaponBuilder WeaponWithHealing(int healing) {
+        WeaponBuilder weaponWithHealing(int healing) {
             newWeapon.healing = healing;
             return this;
         }

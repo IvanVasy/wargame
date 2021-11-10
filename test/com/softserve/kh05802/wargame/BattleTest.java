@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BattleTest {
 
@@ -454,6 +453,7 @@ class BattleTest {
         var res = Battle.fight(army1, army2);
         assertFalse(res);
     }
+
     @Test
     @DisplayName("19. Battle")
     void battle19() {
@@ -527,6 +527,7 @@ class BattleTest {
         var res = Battle.straightFight(army1, army2);
         assertTrue(res);
     }
+
     @Test
     @DisplayName("23. Battle")
     void battle23() {
@@ -604,6 +605,244 @@ class BattleTest {
         army1.moveUnits();
         army2.moveUnits();
         var res = Battle.straightFight(army1, army2);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("1. Weapon")
+    void weapon1() {
+        var unit1 = new Warrior();
+        var unit2 = new Vampire();
+        var weapon1 = new Weapon.WeaponBuilder()
+                .weaponWithHealth(-10)
+                .weaponWithAttack(5)
+                .weaponWithVampirism(40)
+                .build();
+        var weapon2 = Weapon.sword();
+        unit1.equipWeapon(weapon1);
+        unit2.equipWeapon(weapon2);
+        var res = Battle.fight(unit1, unit2);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("2. Weapon")
+    void weapon2() {
+        var unit1 = new Defender();
+        var unit2 = new Lancer();
+        var weapon1 = Weapon.shield();
+        var weapon2 = Weapon.greateAxe();
+        unit1.equipWeapon(weapon1);
+        unit2.equipWeapon(weapon2);
+        var res = Battle.fight(unit1, unit2);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("3. Weapon")
+    void weapon3() {
+        var unit1 = new Healer();
+        var unit2 = new Knight();
+        var weapon1 = Weapon.magicWand();
+        var weapon2 = Weapon.katana();
+        unit1.equipWeapon(weapon1);
+        unit2.equipWeapon(weapon2);
+        var res = Battle.fight(unit1, unit2);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("4. Weapon")
+    void weapon4() {
+        var unit1 = new Defender();
+        var unit2 = new Vampire();
+        var weapon1 = Weapon.shield();
+        var weapon2 = Weapon.magicWand();
+        var weapon3 = Weapon.shield();
+        var weapon4 = Weapon.katana();
+        unit1.equipWeapon(weapon1);
+        unit1.equipWeapon(weapon2);
+        unit2.equipWeapon(weapon3);
+        unit2.equipWeapon(weapon4);
+        var res = Battle.fight(unit1, unit2);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("5. Weapon")
+    void weapon5() {
+        var weapon1 = Weapon.magicWand();
+        var weapon2 = Weapon.greateAxe();
+        var myArmy = new Army();
+        myArmy.addUnits(Knight.class, 1);
+        myArmy.addUnits(Lancer.class, 1);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Vampire.class, 1);
+        enemyArmy.addUnits(Healer.class, 1);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon2);
+        var res = Battle.fight(myArmy, enemyArmy);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("6. Weapon")
+    void weapon6() {
+        var weapon1 = Weapon.sword();
+        var weapon2 = Weapon.greateAxe();
+        var myArmy = new Army();
+        myArmy.addUnits(Defender.class, 1);
+        myArmy.addUnits(Warrior.class, 1);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Knight.class, 1);
+        enemyArmy.addUnits(Healer.class, 1);
+        myArmy.peekUnit(0).equipWeapon(weapon2);
+        myArmy.peekUnit(1).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon1);
+        var res = Battle.fight(myArmy, enemyArmy);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("7. Weapon")
+    void weapon7() {
+        var weapon1 = Weapon.katana();
+        var myArmy = new Army();
+        myArmy.addUnits(Defender.class, 2);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Knight.class, 1);
+        enemyArmy.addUnits(Vampire.class, 1);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon1);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon1);
+        var res = Battle.fight(myArmy, enemyArmy);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("8. Weapon")
+    void weapon8() {
+        var weapon1 = new Weapon.WeaponBuilder()
+                .weaponWithHealing(-20)
+                .weaponWithAttack(6)
+                .weaponWithDefense(1)
+                .weaponWithVampirism(40)
+                .weaponWithHealing(-2)
+                .build();
+        var weapon2 = new Weapon.WeaponBuilder()
+                .weaponWithHealing(20)
+                .weaponWithAttack(-2)
+                .weaponWithDefense(2)
+                .weaponWithVampirism(-55)
+                .weaponWithHealing(3)
+                .build();
+        var myArmy = new Army();
+        myArmy.addUnits(Knight.class, 3);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Warrior.class, 1);
+        enemyArmy.addUnits(Defender.class, 2);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon1);
+        myArmy.peekUnit(2).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon2);
+        enemyArmy.peekUnit(2).equipWeapon(weapon2);
+        var res = Battle.fight(myArmy, enemyArmy);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("9. Weapon")
+    void weapon9() {
+        var weapon1 = new Weapon.WeaponBuilder()
+                .weaponWithHealth(-20)
+                .weaponWithAttack(1)
+                .weaponWithDefense(1)
+                .weaponWithVampirism(40)
+                .weaponWithHealing(-2)
+                .build();
+        var weapon2 = new Weapon.WeaponBuilder()
+                .weaponWithHealth(20)
+                .weaponWithAttack(2)
+                .weaponWithDefense(2)
+                .weaponWithVampirism(-55)
+                .weaponWithHealing(3)
+                .build();
+        var myArmy = new Army();
+        myArmy.addUnits(Vampire.class, 3);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Warrior.class, 1);
+        enemyArmy.addUnits(Defender.class, 2);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon1);
+        myArmy.peekUnit(2).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon2);
+        enemyArmy.peekUnit(2).equipWeapon(weapon2);
+        var res = Battle.fight(myArmy, enemyArmy);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("10. Weapon")
+    void weapon10() {
+        var weapon1 = Weapon.katana();
+        var weapon2 = Weapon.shield();
+        var myArmy = new Army();
+        myArmy.addUnits(Vampire.class, 2);
+        myArmy.addUnits(Rookie.class, 2);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Warrior.class, 1);
+        enemyArmy.addUnits(Defender.class, 2);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon1);
+        myArmy.peekUnit(2).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon2);
+        enemyArmy.peekUnit(2).equipWeapon(weapon2);
+        var res = Battle.straightFight(myArmy, enemyArmy);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("11. Weapon")
+    void weapon11() {
+        var weapon1 = Weapon.sword();
+        var weapon2 = Weapon.greateAxe();
+        var myArmy = new Army();
+        myArmy.addUnits(Vampire.class, 3);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Warrior.class, 1);
+        enemyArmy.addUnits(Defender.class, 1);
+        myArmy.peekUnit(0).equipWeapon(weapon2);
+        myArmy.peekUnit(1).equipWeapon(weapon2);
+        myArmy.peekUnit(2).equipWeapon(weapon2);
+        enemyArmy.peekUnit(0).equipWeapon(weapon1);
+        enemyArmy.peekUnit(1).equipWeapon(weapon1);
+        var res = Battle.straightFight(myArmy, enemyArmy);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("12. Weapon")
+    void weapon12() {
+        var weapon1 = Weapon.katana();
+        var weapon2 = Weapon.magicWand();
+        var myArmy = new Army();
+        myArmy.addUnits(Rookie.class, 3);
+        var enemyArmy = new Army();
+        enemyArmy.addUnits(Defender.class, 1);
+        enemyArmy.addUnits(Healer.class, 1);
+        myArmy.peekUnit(0).equipWeapon(weapon1);
+        myArmy.peekUnit(1).equipWeapon(weapon1);
+        myArmy.peekUnit(2).equipWeapon(weapon1);
+        enemyArmy.peekUnit(0).equipWeapon(weapon2);
+        enemyArmy.peekUnit(1).equipWeapon(weapon2);
+        var res = Battle.straightFight(myArmy, enemyArmy);
         assertFalse(res);
     }
 }
