@@ -8,7 +8,7 @@ public class Army {
 
     private boolean haveWarlord = false;
     private LinkedList<Warrior> preparedArmy = new LinkedList<>();
-
+    public String warlordClass;
 
     boolean armyIsAlive() {
         boolean hisAlive = true;
@@ -54,11 +54,12 @@ public class Army {
 
     private List<Warrior> generateUnits(Class<? extends Warrior> type, int quantity) {
         List<Warrior> res = new LinkedList<>();
-        if (type == Warlord.class) {
+        if ((type == Warlord.class) || (type == Dracula.class)) {
             if (!haveWarlord) {
                 res.add(generateUnit(type));
                 haveWarlord = true;
-            }
+                warlordClass = type.getSimpleName();
+            }//type == Dracula.class
         } else {
             for (int i = 0; i < quantity; i++) {
                 res.add(generateUnit(type));
@@ -81,12 +82,34 @@ public class Army {
             case "Healer" -> new Healer();
             case "Warlord" -> new Warlord();
             case "Rookie" -> new Rookie();
+            case "HighVampire" -> new HighVampire();
+            case "Werewolf" -> new Werewolf();
+            case "Ghost" -> new Ghost();
+            case "Dracula" -> new Dracula();
             default -> throw new IllegalArgumentException("Unknown type: " + type);
         };
     }
 
     boolean checkFor(int i, Class<? extends Warrior> type) {
         return preparedArmy.get(i).getClass() == type;
+    }
+
+    private Army evolveUnit() {
+        for (int i = 0; i < getPreparedArmy().size(); i++) {
+            if (preparedArmy.get(i).getClass() == Vampire.class) {
+                preparedArmy.set(i, new HighVampire());
+            }
+            if ((preparedArmy.get(i).getClass() == Warrior.class)
+                    || (preparedArmy.get(i).getClass() == Knight.class)
+                    || (preparedArmy.get(i).getClass() == Lancer.class)
+                    || (preparedArmy.get(i).getClass() == Defender.class)) {
+                preparedArmy.set(i, new Werewolf());
+            }
+            if (preparedArmy.get(i).getClass() == Healer.class) {
+                preparedArmy.set(i, new Ghost());
+            }
+        }
+        return this;
     }
 
     void swap(int i, int j) {
@@ -96,17 +119,24 @@ public class Army {
     protected void moveUnits() {
         if (!haveWarlord)
             return;
+        if (warlordClass != "Dracula") {
+            for (int i = 0; i < preparedArmy.size(); i++)
+                for (int j = i + 1; j < preparedArmy.size(); j++) {
+                    if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class))
+                        swap(i, j);
+                    if (checkFor(i, Warlord.class))
+                        swap(i, preparedArmy.size() - 1);
+                    if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class))
+                        swap(0, j);
+                    if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class))
+                        swap(i, j);
+                }
+        }
+        evolveUnit();
         for (int i = 0; i < preparedArmy.size(); i++)
-            for (int j = i + 1; j < preparedArmy.size(); j++) {
-                if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class))
-                    swap(i, j);
-                if (checkFor(i, Warlord.class))
+            for (int j = i + 1; j < preparedArmy.size(); j++)
+                if (checkFor(i, Dracula.class))
                     swap(i, preparedArmy.size() - 1);
-                if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class))
-                    swap(0, j);
-                if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class))
-                    swap(i, j);
-            }
     }
 
     public int getFirst() {
