@@ -8,7 +8,7 @@ public class Army {
 
     private boolean haveWarlord = false;
     private LinkedList<Warrior> preparedArmy = new LinkedList<>();
-    public String warlordClass;
+    private String warlordClass;
 
     boolean armyIsAlive() {
         boolean hisAlive = true;
@@ -97,7 +97,8 @@ public class Army {
     private Army evolveUnit() {
         for (int i = 0; i < getPreparedArmy().size(); i++) {
             if (preparedArmy.get(i).getClass() == Vampire.class) {
-                preparedArmy.set(i, new HighVampire());
+                preparedArmy.remove(i);
+                preparedArmy.add(i, new HighVampire());
             }
             if ((preparedArmy.get(i).getClass() == Warrior.class)
                     || (preparedArmy.get(i).getClass() == Knight.class)
@@ -119,8 +120,8 @@ public class Army {
     protected void moveUnits() {
         if (!haveWarlord)
             return;
-        if (warlordClass != "Dracula") {
-            for (int i = 0; i < preparedArmy.size(); i++)
+        if (warlordClass.equals("Warlord")) {
+            for (int i = 0; i < preparedArmy.size(); i++) {
                 for (int j = i + 1; j < preparedArmy.size(); j++) {
                     if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class))
                         swap(i, j);
@@ -131,12 +132,15 @@ public class Army {
                     if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class))
                         swap(i, j);
                 }
+            }
+            return;
         }
         evolveUnit();
         for (int i = 0; i < preparedArmy.size(); i++)
             for (int j = i + 1; j < preparedArmy.size(); j++)
                 if (checkFor(i, Dracula.class))
                     swap(i, preparedArmy.size() - 1);
+
     }
 
     public int getFirst() {

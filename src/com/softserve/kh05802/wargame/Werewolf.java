@@ -9,4 +9,9 @@ public class Werewolf extends Warrior {
     protected Werewolf(int attack, int health) {
         super(attack, health);
     }
+
+    @Override
+    void equipWeapon(Weapon weapon) {
+        return;
+    }
 }

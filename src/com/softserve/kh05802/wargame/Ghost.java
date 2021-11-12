@@ -14,4 +14,9 @@ public class Ghost extends Warrior {
     protected int getDamage(Warrior damageDealer) {
         return damageDealer.getAttack() / 2;
     }
+
+    @Override
+    void equipWeapon(Weapon weapon) {
+        return;
+    }
 }
