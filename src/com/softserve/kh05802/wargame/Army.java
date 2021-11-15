@@ -2,6 +2,7 @@ package com.softserve.kh05802.wargame;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Army {
@@ -10,12 +11,9 @@ public class Army {
     private LinkedList<Warrior> preparedArmy = new LinkedList<>();
     private String warlordClass;
 
-    boolean armyIsAlive() {
-        boolean hisAlive = true;
-        for (Warrior warrior : preparedArmy) {
-            hisAlive = warrior.isAlive();
-        }
-        return !preparedArmy.isEmpty() && hisAlive;
+    boolean isArmyAlive() {
+        return preparedArmy.stream()
+                .anyMatch(Warrior::isAlive);
     }
 
     public Warrior peekUnit(int i) {
@@ -54,12 +52,12 @@ public class Army {
 
     private List<Warrior> generateUnits(Class<? extends Warrior> type, int quantity) {
         List<Warrior> res = new LinkedList<>();
-        if ((type == Warlord.class) || (type == Dracula.class)) {
+        if (type == Warlord.class || type == Dracula.class) {
             if (!haveWarlord) {
                 res.add(generateUnit(type));
                 haveWarlord = true;
                 warlordClass = type.getSimpleName();
-            }//type == Dracula.class
+            }
         } else {
             for (int i = 0; i < quantity; i++) {
                 res.add(generateUnit(type));
@@ -93,16 +91,14 @@ public class Army {
     boolean checkFor(int i, Class<? extends Warrior> type) {
         return preparedArmy.get(i).getClass() == type;
     }
-
+    
     private void evolveUnit() {
+        Set<Class<? extends Warrior>> setOfUnits = Set.of(Warrior.class, Knight.class, Defender.class, Lancer.class);
         for (int i = 0; i < getPreparedArmy().size(); i++) {
             if (preparedArmy.get(i).getClass() == Vampire.class) {
                 preparedArmy.set(i, new HighVampire());
             }
-            if ((preparedArmy.get(i).getClass() == Warrior.class)
-                    || (preparedArmy.get(i).getClass() == Knight.class)
-                    || (preparedArmy.get(i).getClass() == Lancer.class)
-                    || (preparedArmy.get(i).getClass() == Defender.class)) {
+            if (setOfUnits.contains(preparedArmy.get(i).getClass())) {
                 preparedArmy.set(i, new Werewolf());
             }
             if (preparedArmy.get(i).getClass() == Healer.class) {
@@ -115,30 +111,45 @@ public class Army {
         preparedArmy.set(i, preparedArmy.set(j, preparedArmy.get(i)));
     }
 
+    private void warlordMove() {
+        for (int i = 0; i < preparedArmy.size(); i++) {
+            for (int j = i + 1; j < preparedArmy.size(); j++) {
+                if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class)) {
+                    swap(i, j);
+                }
+                if (checkFor(i, Warlord.class)) {
+                    swap(i, preparedArmy.size() - 1);
+                }
+                if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class)) {
+                    swap(0, j);
+                }
+                if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class)) {
+                    swap(i, j);
+                }
+            }
+        }
+    }
+
+    private void draculaMove() {
+        evolveUnit();
+        for (int i = 0; i < preparedArmy.size(); i++) {
+            for (int j = i + 1; j < preparedArmy.size(); j++) {
+                if (checkFor(i, Dracula.class)) {
+                    swap(i, preparedArmy.size() - 1);
+                }
+            }
+        }
+        reconnect();
+    }
+
     protected void moveUnits() {
         if (!haveWarlord)
             return;
         if (warlordClass.equals("Warlord")) {
-            for (int i = 0; i < preparedArmy.size(); i++) {
-                for (int j = i + 1; j < preparedArmy.size(); j++) {
-                    if (!checkFor(i, Lancer.class) && checkFor(j, Lancer.class))
-                        swap(i, j);
-                    if (checkFor(i, Warlord.class))
-                        swap(i, preparedArmy.size() - 1);
-                    if (!checkFor(0, Lancer.class) && !checkFor(j, Healer.class) && !checkFor(j, Warlord.class))
-                        swap(0, j);
-                    if (i != 0 && !checkFor(i, Healer.class) && checkFor(j, Healer.class))
-                        swap(i, j);
-                }
-            }
+            warlordMove();
             return;
         }
-        evolveUnit();
-        for (int i = 0; i < preparedArmy.size(); i++)
-            for (int j = i + 1; j < preparedArmy.size(); j++)
-                if (checkFor(i, Dracula.class))
-                    swap(i, preparedArmy.size() - 1);
-        reconnect();
+        draculaMove();
     }
 
     public int getFirst() {
