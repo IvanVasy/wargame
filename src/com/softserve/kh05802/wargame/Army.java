@@ -97,8 +97,7 @@ public class Army {
     private Army evolveUnit() {
         for (int i = 0; i < getPreparedArmy().size(); i++) {
             if (preparedArmy.get(i).getClass() == Vampire.class) {
-                preparedArmy.remove(i);
-                preparedArmy.add(i, new HighVampire());
+                preparedArmy.set(i, new HighVampire());
             }
             if ((preparedArmy.get(i).getClass() == Warrior.class)
                     || (preparedArmy.get(i).getClass() == Knight.class)
@@ -140,7 +139,7 @@ public class Army {
             for (int j = i + 1; j < preparedArmy.size(); j++)
                 if (checkFor(i, Dracula.class))
                     swap(i, preparedArmy.size() - 1);
-
+        reconnect();
     }
 
     public int getFirst() {
