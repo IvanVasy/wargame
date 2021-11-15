@@ -125,6 +125,78 @@ class BattleTest {
     }
 
     @Test
+    @DisplayName("10. Fight (Dracula)")
+    void fight10() {
+        Warrior unit1 = new Dracula();
+        Warrior unit2 = new Rookie();
+        Warrior unit3 = new Warrior();
+
+        Battle.fight(unit1, unit2);
+        boolean result = Battle.fight(unit1, unit3);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("11. Fight (Dracula)")
+    void fight11() {
+        Warrior unit1 = new Dracula();
+        Warrior unit3 = new Warrior();
+        unit3.equipWeapon(Weapon.katana());
+        boolean result = Battle.fight(unit1, unit3);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("12. Fight (HighVampire vs Werewolf)")
+    void fight12() {
+        Warrior unit1 = new HighVampire();
+        Warrior unit3 = new Werewolf();
+        boolean result = Battle.fight(unit1, unit3);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("13. Fight (HighVampire vs Ghosy)")
+    void fight13() {
+        Warrior unit1 = new Ghost();
+        Warrior unit3 = new HighVampire();
+        boolean result = Battle.fight(unit1, unit3);
+        assertFalse(result);
+    }
+
+    @Test
+    @DisplayName("14. Fight (1hp Warrior vs Ghost)")
+    void fight14() {
+        var weapon = new Weapon.WeaponBuilder()
+                .weaponWithHealth(-46)
+                .weaponWithAttack(54)
+                .weaponWithDefense(1_000_000)
+                .weaponWithVampirism(200)
+                .weaponWithHealing(+1000)
+                .build();
+        Warrior unit1 = new Ghost();
+        Warrior unit3 = new Warrior();
+        unit3.equipWeapon(weapon);
+        boolean result = Battle.fight(unit1, unit3);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("15. Fight (no weapon on evolve units)")
+    void fight15() {
+        Warrior unit1 = new Ghost();
+        unit1.equipWeapon(Weapon.katana());
+        unit1.equipWeapon(Weapon.katana());
+        unit1.equipWeapon(Weapon.katana());
+        unit1.equipWeapon(Weapon.katana());
+        unit1.equipWeapon(Weapon.katana());
+        Warrior unit2 = new Vampire();
+        boolean result = Battle.fight(unit1, unit2);
+        assertFalse(result);
+    }
+
+    @Test
     @Order(10)
     @DisplayName("1. Battle")
     void battle1() {
@@ -605,6 +677,40 @@ class BattleTest {
         army1.moveUnits();
         army2.moveUnits();
         var res = Battle.straightFight(army1, army2);
+        assertFalse(res);
+    }
+
+    @Test
+    @DisplayName("27. Battle")
+    void battle27() {
+        Army army1 = new Army().addUnits(Lancer.class, 7).addUnits(Dracula.class, 1_000)
+                .addUnits(Vampire.class, 3)
+                .addUnits(Warrior.class, 4)
+                .addUnits(Defender.class, 2);
+        Army army2 = new Army().addUnits(Lancer.class, 2).addUnits(Warrior.class, 4)
+                .addUnits(Defender.class, 4)
+                .addUnits(Vampire.class, 6)
+                .addUnits(Lancer.class, 4);
+        army1.moveUnits();
+        army2.moveUnits();
+        boolean res = Battle.fight(army1, army2);
+        assertTrue(res);
+    }
+
+    @Test
+    @DisplayName("28. Battle")
+    void battle28() {
+        Army army1 = new Army().addUnits(Lancer.class, 7).addUnits(Dracula.class, 1_000)
+                .addUnits(Vampire.class, 3)
+                .addUnits(Warrior.class, 4)
+                .addUnits(Defender.class, 2);
+        Army army2 = new Army().addUnits(Lancer.class, 7).addUnits(Dracula.class, 1_000)
+                .addUnits(Vampire.class, 3)
+                .addUnits(Warrior.class, 4)
+                .addUnits(Defender.class, 6);
+        army1.moveUnits();
+        army2.moveUnits();
+        boolean res = Battle.fight(army1, army2);
         assertFalse(res);
     }
 

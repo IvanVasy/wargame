@@ -31,8 +31,8 @@ public class Healer extends Warrior {
 
     @Override
     void equipWeapon(Weapon weapon) {
-        this.setHealth(getHealth() + weapon.getHealth());
-        this.setMaxHealth(this.getHealth());
+        setHealth(getHealth() + weapon.getHealth());
+        setMaxHealth(getHealth());
         setHealing(getHealing() + weapon.getHealing());
         if (getHealing() < 0) {
             setHealing(0);
