@@ -94,7 +94,7 @@ public class Army {
         return preparedArmy.get(i).getClass() == type;
     }
 
-    private Army evolveUnit() {
+    private void evolveUnit() {
         for (int i = 0; i < getPreparedArmy().size(); i++) {
             if (preparedArmy.get(i).getClass() == Vampire.class) {
                 preparedArmy.set(i, new HighVampire());
@@ -109,7 +109,6 @@ public class Army {
                 preparedArmy.set(i, new Ghost());
             }
         }
-        return this;
     }
 
     void swap(int i, int j) {
